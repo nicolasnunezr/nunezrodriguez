@@ -113,6 +113,7 @@ main {
   background: var(--logo-bg);
   border: 1px solid var(--hairline);
   flex: none;
+  transform: translateZ(0);
 }
 .logo img {
   display: block;
@@ -123,6 +124,10 @@ main {
   padding: 3px;
   filter: grayscale(0.4);
   transition: filter 0.25s ease;
+}
+.logo--filled img {
+  padding: 0;
+  object-fit: cover;
 }
 .cv-item:hover .logo img {
   filter: none;
