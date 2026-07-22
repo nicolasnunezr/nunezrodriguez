@@ -1,6 +1,52 @@
 (function () {
   'use strict';
 
+  // LinkedIn-style: count start and end months inclusively.
+  function monthsBetween(startYear, startMonth, endYear, endMonth) {
+    var total = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+    return total < 0 ? 0 : total;
+  }
+
+  function formatDuration(totalMonths) {
+    var years = Math.floor(totalMonths / 12);
+    var months = totalMonths % 12;
+    var parts = [];
+    if (years > 0) parts.push(years + (years === 1 ? ' yr' : ' yrs'));
+    if (months > 0 || years === 0) parts.push(months + ' mo');
+    return parts.join(' ');
+  }
+
+  function parseYearMonth(value, now) {
+    if (!value) return null;
+    if (value === 'present') {
+      return { year: now.getFullYear(), month: now.getMonth() + 1 };
+    }
+    var match = /^(\d{4})-(\d{2})$/.exec(value);
+    if (!match) return null;
+    return { year: +match[1], month: +match[2] };
+  }
+
+  function durationFromAttrs(el, now) {
+    var start = parseYearMonth(el.getAttribute('data-start'), now);
+    var end = parseYearMonth(el.getAttribute('data-end') || 'present', now);
+    if (!start || !end) return null;
+    return formatDuration(monthsBetween(start.year, start.month, end.year, end.month));
+  }
+
+  var now = new Date();
+
+  document.querySelectorAll('.cv-dates[data-start]').forEach(function (el) {
+    var duration = durationFromAttrs(el, now);
+    if (duration) el.textContent = duration;
+  });
+
+  document.querySelectorAll('.role-dates[data-start]').forEach(function (el) {
+    var duration = durationFromAttrs(el, now);
+    if (!duration) return;
+    var label = el.textContent.replace(/\s·\s[\d\w\s]+$/, '').trim();
+    el.textContent = label + ' · ' + duration;
+  });
+
   var emailLink = document.querySelector('.email-link');
   var toast = document.querySelector('.copied-toast');
   var toastTimer;
