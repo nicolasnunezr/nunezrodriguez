@@ -1,0 +1,66 @@
+---
+import CopyEmail from "./CopyEmail.astro";
+
+const links = [
+  { label: "X", href: "https://x.com/nicolasnunezr" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/nicolas-nunez-rodriguez/" },
+  { label: "GitHub", href: "https://github.com/nicolasnunezr" },
+];
+---
+
+<h1 class="name serif">Nicolás Núñez Rodríguez</h1>
+<p class="lede">Data Scientist at Securitize. <span>Building AI and data systems for tokenized finance.</span></p>
+<div class="cta">
+  <CopyEmail />
+  <nav class="social" aria-label="Elsewhere">
+    {links.map((link) => <a href={link.href} target="_blank" rel="noopener">{link.label}</a>)}
+  </nav>
+</div>
+
+<style>
+  .name {
+    font-size: 34px;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .lede {
+    margin: 12px 0 0;
+    font-size: 16px;
+    line-height: 1.45;
+    max-width: 34ch;
+  }
+  .lede span {
+    color: var(--faint);
+  }
+  .cta {
+    display: flex;
+    align-items: center;
+    gap: 12px 18px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .social a {
+    font-size: 13px;
+    color: var(--mute);
+    text-decoration: none;
+    margin-right: 14px;
+  }
+  .social a:hover {
+    color: var(--ink);
+  }
+  @media (max-width: 640px) {
+    .name {
+      font-size: 28px;
+    }
+    .lede {
+      font-size: 15px;
+    }
+    .social {
+      flex-basis: 100%;
+    }
+    .social a {
+      display: inline-block;
+      padding: 12px 0;
+    }
+  }
+</style>

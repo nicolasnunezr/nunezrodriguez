@@ -1,0 +1,142 @@
+---
+// Real output of the thesis multi-agent route, run on 2026-10-17 (see spec §4).
+const steps = [
+  { who: "Query agent", what: "Picks the dataset, countries and year", kind: "ai" },
+  { who: "Eurostat API", what: "Fetches the official data", kind: "code" },
+  { who: "Interpretation", what: "Organizes the values in code", kind: "code" },
+  { who: "Verdict agent", what: "Compares them and writes the answer", kind: "ai" },
+];
+---
+
+<div class="trace">
+  <div class="q">
+    <span class="lbl">Claim</span>
+    <p class="claim">“Spain borrowed more cheaply than France in 2025.”</p>
+  </div>
+  <ol class="steps">
+    {
+      steps.map((step) => (
+        <li class:list={["step", step.kind]}>
+          <i />
+          <span class="who">{step.who}</span>
+          <span class="what">{step.what}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="res">
+    <span class="pill">True</span>
+    <span class="vs"><span>Spain <b>3.21%</b></span><span>France <b>3.35%</b></span></span>
+    <span class="src">10-year yield, 2025 · Eurostat</span>
+  </div>
+</div>
+
+<style>
+  .trace {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    margin: 6px 0 12px;
+    overflow: hidden;
+    max-width: 520px;
+  }
+  .q {
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .lbl {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--faint);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .claim {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.3;
+    margin: 0;
+    color: var(--ink);
+  }
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    gap: 5px;
+  }
+  .step {
+    display: grid;
+    grid-template-columns: 10px 112px 1fr;
+    gap: 8px;
+    align-items: baseline;
+    font-size: 12.5px;
+    color: var(--mute);
+  }
+  .step i {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .ai i {
+    background: var(--ai);
+  }
+  .code i {
+    background: var(--code);
+  }
+  .who {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink);
+  }
+  .res {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    background: #e8f4ec;
+    color: #22663b;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-weight: 500;
+  }
+  .vs {
+    display: flex;
+    gap: 14px;
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    color: var(--mute);
+  }
+  .vs b {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .src {
+    color: var(--faint);
+    font-size: 12px;
+    margin-left: auto;
+  }
+  @media (max-width: 640px) {
+    .step {
+      grid-template-columns: 10px 1fr;
+    }
+    .what {
+      display: none;
+    }
+    .src {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>

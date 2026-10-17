@@ -1,0 +1,66 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<button class="share" type="button" data-title={title}>Share</button>
+<input class="share-url" type="text" readonly hidden aria-label="Link to this note" />
+
+<script>
+  import { shareUrl } from "../lib/clipboard";
+
+  const button = document.querySelector<HTMLButtonElement>("button.share")!;
+  const fallback = document.querySelector<HTMLInputElement>("input.share-url")!;
+  button.addEventListener("click", async () => {
+    const result = await shareUrl(location.href, button.dataset.title!);
+    if (result === "copied") {
+      button.textContent = "Link copied ✓";
+      setTimeout(() => (button.textContent = "Share"), 1800);
+    } else if (result === "failed") {
+      fallback.value = location.href;
+      fallback.hidden = false;
+      fallback.select();
+    }
+  });
+</script>
+
+<style>
+  .share {
+    all: unset;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--mute);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 12px;
+    background: #fff;
+    white-space: nowrap;
+  }
+  .share:hover {
+    color: var(--ink);
+    border-color: #d6d4cc;
+  }
+  .share:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+  .share-url {
+    width: 100%;
+    margin-top: 10px;
+    font: 12px var(--mono);
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  @media (max-width: 640px), (pointer: coarse) {
+    .share {
+      min-height: 44px;
+      padding-block: 0;
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+</style>

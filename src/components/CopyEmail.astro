@@ -1,0 +1,88 @@
+---
+const email = "nicolas@nunezrodriguez.com";
+---
+
+<button class="copy" type="button" data-email={email}>
+  <span class="addr">{email}</span>
+  <svg viewBox="0 0 16 16" aria-hidden="true">
+    <rect x="5" y="5" width="8.5" height="8.5" rx="1.8"></rect>
+    <path d="M10.5 3.2V3A1.5 1.5 0 0 0 9 1.5H3A1.5 1.5 0 0 0 1.5 3v6A1.5 1.5 0 0 0 3 10.5h.2"></path>
+  </svg>
+  <span class="ok" aria-live="polite"></span>
+</button>
+
+<script>
+  import { copyText } from "../lib/clipboard";
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>("button.copy")) {
+    const ok = button.querySelector<HTMLElement>(".ok")!;
+    const addr = button.querySelector<HTMLElement>(".addr")!;
+    button.addEventListener("click", async () => {
+      if (await copyText(button.dataset.email!)) {
+        ok.textContent = "Copied ✓";
+        button.classList.add("done");
+        setTimeout(() => {
+          button.classList.remove("done");
+          ok.textContent = "";
+        }, 1800);
+      } else {
+        getSelection()?.selectAllChildren(addr);
+      }
+    });
+  }
+</script>
+
+<style>
+  .copy {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 999px;
+    padding: 7px 14px 7px 15px;
+    font-size: 13px;
+    color: var(--ink);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .copy:hover {
+    border-color: #d6d4cc;
+  }
+  .copy:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+  }
+  svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--faint);
+    fill: none;
+    stroke-width: 1.6;
+  }
+  .copy:hover svg {
+    stroke: var(--ink);
+  }
+  .ok {
+    display: none;
+    color: #2f7a4a;
+  }
+  .done {
+    border-color: #cfe5d6;
+    background: #f3faf5;
+  }
+  .done .ok {
+    display: inline;
+  }
+  .done .addr,
+  .done svg {
+    display: none;
+  }
+  @media (max-width: 640px), (pointer: coarse) {
+    .copy {
+      min-height: 44px;
+      padding-block: 0;
+    }
+  }
+</style>

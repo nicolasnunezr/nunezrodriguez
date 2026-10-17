@@ -1,0 +1,158 @@
+---
+import { getCollection, render } from "astro:content";
+import { projectTag } from "../lib/project-tag";
+import ThesisTrace from "./visuals/ThesisTrace.astro";
+import MirrortraceRename from "./visuals/MirrortraceRename.astro";
+
+const visuals = { "thesis-trace": ThesisTrace, "mirrortrace-rename": MirrortraceRename };
+const projects = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+const rendered = await Promise.all(projects.map(async (p) => ({ ...p, Content: (await render(p)).Content })));
+---
+
+<section id="projects">
+  <h2 class="mono">Projects</h2>
+  {
+    rendered.map(({ data, Content }) => {
+      const Visual = data.visual ? visuals[data.visual] : null;
+      return (
+        <details class="proj">
+          <summary>
+            <span class="t">
+              <span class="tt">{data.title}</span>&#8288;<span class="chev" aria-hidden="true" />
+            </span>
+            <span class:list={["tags", { soon: data.status === "soon" }]}>
+              <span class="tag full">{projectTag(data, false)}</span>
+              <span class="tag short">{projectTag(data, true)}</span>
+            </span>
+            <span class="one">{data.summary}</span>
+          </summary>
+          <div class="body">
+            {Visual && <Visual />}
+            <Content />
+            {data.status === "live" && data.link && (
+              <a class="link" href={data.link} target="_blank" rel="noopener">
+                {new URL(data.link).hostname} ↗
+              </a>
+            )}
+          </div>
+        </details>
+      );
+    })
+  }
+</section>
+
+<style>
+  .proj {
+    border-top: 1px solid var(--line);
+  }
+  summary {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 16px;
+    padding: 13px 0;
+    list-style: none;
+    cursor: pointer;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  summary:hover .tt {
+    text-decoration: underline;
+    text-decoration-color: #d6d4cc;
+    text-underline-offset: 3px;
+  }
+  summary > .t {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .chev {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-right: 1.3px solid var(--faint);
+    border-bottom: 1.3px solid var(--faint);
+    transform: rotate(-45deg);
+    margin-left: 9px;
+    position: relative;
+    top: -1px;
+    transition: transform 0.2s ease;
+  }
+  details[open] .chev {
+    transform: rotate(45deg);
+    top: -3px;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--mute);
+    white-space: nowrap;
+  }
+  .soon .tag {
+    color: var(--amber);
+  }
+  .tag.short {
+    display: none;
+  }
+  .one {
+    grid-column: 1 / -1;
+    color: var(--mute);
+    font-size: 13px;
+  }
+  .body {
+    padding: 2px 0 12px;
+    color: #3d3c38;
+    font-size: 13.5px;
+  }
+  .body :global(p) {
+    margin: 0 0 10px;
+    max-width: 56ch;
+  }
+  .link {
+    font-size: 12.5px;
+    text-decoration: underline;
+    text-decoration-color: #d6d4cc;
+    text-underline-offset: 3px;
+  }
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size 0.28s ease,
+      opacity 0.28s ease,
+      content-visibility 0.28s allow-discrete;
+  }
+  details[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    details::details-content,
+    .chev {
+      transition: none;
+    }
+  }
+  @media (pointer: coarse) {
+    summary {
+      min-height: 44px;
+    }
+  }
+  @media (max-width: 640px) {
+    summary {
+      min-height: 44px;
+    }
+    .tag.full {
+      display: none;
+    }
+    .tag.short {
+      display: inline;
+    }
+  }
+</style>

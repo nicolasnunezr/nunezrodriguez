@@ -1,0 +1,132 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import ShareButton from "../../components/ShareButton.astro";
+import { formatLongDate } from "../../lib/dates";
+import { publishedNotes } from "../../lib/notes";
+import { readingTime } from "../../lib/reading-time";
+
+export const getStaticPaths = (async () => {
+  const notes = publishedNotes(await getCollection("notes"), import.meta.env.PROD);
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}) satisfies GetStaticPaths;
+
+const { note } = Astro.props as { note: CollectionEntry<"notes"> };
+const { Content } = await render(note);
+const minutes = readingTime(note.body ?? "");
+---
+
+<Base
+  title={note.data.title}
+  description={note.data.description}
+  ogImage={`/og/${note.id}.png`}
+  canonicalPath={`/notes/${note.id}/`}
+>
+  <a class="back" href="/">← Nicolás Núñez Rodríguez</a>
+  <article>
+    <h1 class="ntitle serif">{note.data.title}</h1>
+    <div class="nrowmeta">
+      <span class="nmeta">{formatLongDate(note.data.date)} · {minutes} min read</span>
+      <ShareButton title={note.data.title} />
+    </div>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <div class="nfoot"><a href="/#notes">← All notes</a></div>
+</Base>
+
+<style>
+  .back,
+  .nfoot a {
+    font-size: 13px;
+    color: var(--mute);
+    text-decoration: none;
+  }
+  .back:hover,
+  .nfoot a:hover {
+    color: var(--ink);
+  }
+  .ntitle {
+    overflow-wrap: anywhere;
+    font-size: 32px;
+    line-height: 1.15;
+    margin: 34px 0 10px;
+  }
+  .nrowmeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nmeta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--faint);
+    text-transform: uppercase;
+  }
+  .prose {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.65;
+    color: #26251f;
+    max-width: 62ch;
+    margin-top: 26px;
+    overflow-wrap: break-word;
+  }
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol),
+  .prose :global(blockquote) {
+    margin: 0 0 18px;
+  }
+  .prose :global(h2),
+  .prose :global(h3) {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    margin: 28px 0 8px;
+  }
+  .prose :global(a) {
+    text-decoration-color: #c9c7bf;
+    text-underline-offset: 3px;
+  }
+  .prose :global(blockquote) {
+    border-left: 2px solid var(--line);
+    padding-left: 16px;
+    color: var(--mute);
+  }
+  .prose :global(code) {
+    font-family: var(--mono);
+    font-size: 0.8em;
+  }
+  .prose :global(pre) {
+    overflow-x: auto;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .prose :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+  .nfoot {
+    margin-top: 30px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 640px) {
+    .ntitle {
+      font-size: 28px;
+    }
+    .prose {
+      font-size: 17px;
+    }
+  }
+</style>

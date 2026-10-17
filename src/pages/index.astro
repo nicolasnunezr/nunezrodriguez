@@ -1,0 +1,25 @@
+---
+import Base from "../layouts/Base.astro";
+import Banner from "../components/Banner.astro";
+import Intro from "../components/Intro.astro";
+import Experience from "../components/Experience.astro";
+import Projects from "../components/Projects.astro";
+import Education from "../components/Education.astro";
+import NotesList from "../components/NotesList.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Base
+  title="Nicolás Núñez Rodríguez"
+  description="Data Scientist at Securitize. Building AI for tokenized finance."
+  ogImage="/og/home.png"
+  canonicalPath="/"
+>
+  <Banner />
+  <Intro />
+  <Experience />
+  <Projects />
+  <Education />
+  <NotesList />
+  <Footer />
+</Base>

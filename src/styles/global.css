@@ -1,0 +1,133 @@
+@import "@fontsource/inter/latin-400.css";
+@import "@fontsource/inter/latin-500.css";
+@import "@fontsource/newsreader/latin-400.css";
+@import "@fontsource/newsreader/latin-400-italic.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
+
+:root {
+  --bg: #faf9f6;
+  --ink: #141413;
+  --mute: #5f5e59;
+  --faint: #73726c;
+  --line: #e9e7e1;
+  --ai: #b9a9f2;
+  --code: #9fd0b0;
+  --amber: #7a5f16;
+  --amber-bg: #f6efdc;
+  --serif: Newsreader, Georgia, serif;
+  --sans: Inter, system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+  interpolate-size: allow-keywords;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 14px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 24px 36px;
+}
+
+.serif {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--faint);
+  font-weight: 400;
+}
+
+/* Sections shared by Experience, Projects, Education and Notes */
+section {
+  margin-top: 40px;
+}
+
+section > h2 {
+  display: block;
+  margin: 0 0 6px;
+}
+
+.org {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  column-gap: 14px;
+  border-top: 1px solid var(--line);
+  padding: 14px 0 6px;
+}
+
+.lg {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: #fff;
+  object-fit: cover;
+}
+
+.lg.pad {
+  object-fit: contain;
+  padding: 2px;
+}
+
+.line1,
+.line2 {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.line2 {
+  margin-top: 1px;
+}
+
+.t {
+  font-weight: 500;
+}
+
+.s {
+  color: var(--mute);
+  font-size: 13px;
+}
+
+.d,
+.loc {
+  color: var(--faint);
+  font-size: 12.5px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .wrap {
+    padding: 22px 18px 26px;
+  }
+}

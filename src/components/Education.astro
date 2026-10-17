@@ -1,0 +1,66 @@
+---
+import { education } from "../data/education";
+---
+
+<section id="education">
+  <h2 class="mono">Education</h2>
+  {
+    education.map((school) => (
+      <div class="org">
+        <img class="lg pad" src={school.logo} alt="" width="30" height="30" />
+        <div>
+          <div class="line1">
+            <span class="name">
+              <span class:list={["t", { full: school.shortName }]}>{school.name}</span>
+              {school.shortName && <span class="t short">{school.shortName}</span>}
+              {school.badge && <span class="badge">{school.badge}</span>}
+            </span>
+            <span class="d wide">{school.dates}</span>
+          </div>
+          <div class="line2">
+            <span class="s">{school.degree}</span>
+            <span class="loc">
+              <span class="narrow">{school.dates} · </span>
+              {school.location}
+            </span>
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .badge {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: var(--amber-bg);
+    border-radius: 4px;
+    padding: 2px 6px;
+    margin-left: 6px;
+    font-weight: 500;
+    vertical-align: 1px;
+    white-space: nowrap;
+  }
+  .short,
+  .narrow {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .full,
+    .wide {
+      display: none;
+    }
+    .short,
+    .narrow {
+      display: inline;
+    }
+    .line2 {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+</style>
