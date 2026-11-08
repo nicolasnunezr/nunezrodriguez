@@ -1,0 +1,86 @@
+<div class="finder" aria-label="Screenshot 2026-09-18 at 10.42.13.png becomes Cannot find 'User' in scope (Xcode).png">
+  <div class="file" aria-hidden="true"></div>
+  <div class="fname" aria-hidden="true">
+    <span class="old">Screenshot 2026-09-18 at 10.42.13.png</span>
+    <span class="new">Cannot find 'User' in scope (Xcode).png</span>
+  </div>
+</div>
+
+<style>
+  .finder {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px 16px;
+    margin: 6px 0 12px;
+    max-width: 520px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .file {
+    width: 26px;
+    height: 32px;
+    border-radius: 3px;
+    background: linear-gradient(#f1f0ec, #e6e4dd);
+    border: 1px solid #dddbd3;
+    position: relative;
+    flex: none;
+  }
+  .file::after {
+    content: "";
+    position: absolute;
+    inset: 7px 5px 9px;
+    border-radius: 1px;
+    background: linear-gradient(135deg, #9db8d8, #c9d8e9);
+  }
+  .fname {
+    position: relative;
+    height: 20px;
+    flex: 1;
+    min-width: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    overflow: hidden;
+  }
+  .fname span {
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    animation: swap-out 5s ease-in-out infinite;
+  }
+  .old {
+    color: var(--faint);
+  }
+  .fname .new {
+    color: var(--ink);
+    animation-name: swap-in;
+  }
+  @keyframes swap-out {
+    0%, 38% { transform: translateY(0); opacity: 1; }
+    48%, 90% { transform: translateY(-110%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes swap-in {
+    0%, 38% { transform: translateY(110%); opacity: 0; }
+    48%, 90% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(110%); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fname span {
+      animation: none;
+    }
+    .old {
+      display: none;
+    }
+    .fname .new {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
+  }
+</style>

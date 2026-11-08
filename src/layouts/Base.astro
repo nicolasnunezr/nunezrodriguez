@@ -1,0 +1,37 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage: string;
+  canonicalPath: string;
+}
+
+const { title, description, ogImage, canonicalPath } = Astro.props;
+const canonical = new URL(canonicalPath, Astro.site);
+const image = new URL(ogImage, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <main class="wrap">
+      <slot />
+    </main>
+  </body>
+</html>

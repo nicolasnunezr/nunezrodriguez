@@ -1,0 +1,37 @@
+---
+import { Picture } from "astro:assets";
+import alicante from "../assets/alicante.jpg";
+---
+
+<div class="banner">
+  <Picture
+    src={alicante}
+    formats={["avif", "webp"]}
+    widths={[640, 960, 1280, 1920]}
+    sizes="(max-width: 640px) calc(100vw - 36px), 640px"
+    alt=""
+    loading="eager"
+    fetchpriority="high"
+  />
+</div>
+
+<style>
+  .banner {
+    margin-bottom: 28px;
+  }
+  .banner :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 1;
+    object-fit: cover;
+    object-position: 70% 55%;
+    border-radius: 6px;
+    filter: saturate(0.72) contrast(0.96);
+  }
+  @media (max-width: 640px) {
+    .banner {
+      margin-bottom: 22px;
+    }
+  }
+</style>

@@ -1,0 +1,79 @@
+---
+import { getCollection } from "astro:content";
+import { formatShortDate } from "../lib/dates";
+import { groupNotesByYear, publishedNotes } from "../lib/notes";
+
+const notes = publishedNotes(await getCollection("notes"), import.meta.env.PROD);
+const groups = groupNotesByYear(notes.map((note) => ({ ...note, date: note.data.date })));
+---
+
+{
+  groups.length > 0 && (
+    <section id="notes">
+      <h2 class="mono">Notes</h2>
+      {groups.map(({ year, notes }) => (
+        <>
+          <div class="yr mono">{year}</div>
+          {notes.map((note, i) => (
+            <a class="nrow" href={`/notes/${note.id}/`}>
+              <span class="y">{i === 0 ? year : ""}</span>
+              <span class="tt">{note.data.title}</span>
+              <span class="nd">{formatShortDate(note.date)}</span>
+            </a>
+          ))}
+        </>
+      ))}
+    </section>
+  )
+}
+
+<style>
+  .nrow {
+    display: grid;
+    grid-template-columns: 58px 1fr auto;
+    gap: 16px;
+    align-items: baseline;
+    padding: 10px 0;
+    border-top: 1px solid var(--line);
+    text-decoration: none;
+  }
+  .y {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+  }
+  .nd {
+    color: var(--faint);
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .nrow:hover .tt {
+    text-decoration: underline;
+    text-decoration-color: #d6d4cc;
+    text-underline-offset: 3px;
+  }
+  .yr {
+    display: none;
+  }
+  @media (pointer: coarse) {
+    .nrow {
+      min-height: 44px;
+      align-items: center;
+    }
+  }
+  @media (max-width: 640px) {
+    .nrow {
+      grid-template-columns: 1fr auto;
+      min-height: 44px;
+      align-items: center;
+    }
+    .y {
+      display: none;
+    }
+    .yr {
+      display: block;
+      padding: 16px 0 6px;
+    }
+  }
+</style>
